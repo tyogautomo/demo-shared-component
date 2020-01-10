@@ -20,10 +20,10 @@ class Item extends Component {
         <View style={{
           width: 300,
           height: 150,
-          backgroundColor: 'blue',
+          backgroundColor: 'white',
           marginBottom: 20,
           borderRadius: 10,
-          elevation: 3,
+          elevation: 1,
           justifyContent: 'center',
           alignItems: 'center'
         }}>
