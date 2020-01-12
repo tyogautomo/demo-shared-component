@@ -17,7 +17,7 @@ import { RootNavigation } from './app/navigations/rootNavigation';
 const App = () => {
   return (
     <>
-      <StatusBar barStyle="light-content" backgroundColor="white" />
+      <StatusBar barStyle="light-content"/>
       <SafeAreaView style={{ flex: 1 }}>
         <RootNavigation />
       </SafeAreaView>

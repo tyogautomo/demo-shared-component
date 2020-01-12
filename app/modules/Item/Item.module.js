@@ -7,8 +7,8 @@ class Item extends Component {
     const { navigation } = this.props
 
     this[name].measure((x, y, width, height, pageX, pageY) => {
-      const position = { x, y, width, height, pageX, pageY }
-      navigation.navigate('ItemDetail', { position });
+      const position = { width, height, pageX, pageY }
+      navigation.navigate('ItemDetail', { position, name });
     })
   };
 
@@ -27,7 +27,7 @@ class Item extends Component {
           justifyContent: 'center',
           alignItems: 'center'
         }}>
-          <Text style={{ color: 'white' }}>{name}</Text>
+          <Text style={{ color: 'black' }}>{name}</Text>
         </View>
       </TouchableOpacity>
     )

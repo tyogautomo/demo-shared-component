@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView} from 'react-native';
 
 import { Item } from '../../modules/Item/Item.module'
 
@@ -22,12 +22,12 @@ class ItemList extends Component {
         id: 4,
         name: 'item 4'
       }
-    ]
+    ],
+    isFromDetail: false
   }
 
   renderItemList = () => {
     const { items } = this.state;
-    const { navigation } = this.props;
 
     return (
       <View style={{ alignItems: 'center', paddingTop: 20 }}>

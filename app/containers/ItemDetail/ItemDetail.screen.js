@@ -1,5 +1,18 @@
 import React, { Component } from 'react';
-import { View, Animated } from 'react-native';
+import { View, StatusBar, Text, BackHandler, Animated } from 'react-native';
+// import Animated from 'react-native-reanimated';
+// const {
+//   Clock,
+//   Value,
+//   set,
+//   cond,
+//   startClock,
+//   clockRunning,
+//   timing,
+//   debug,
+//   stopClock,
+//   block,
+// } = Animated
 
 class ItemDetail extends Component {
   state = {
@@ -10,15 +23,23 @@ class ItemDetail extends Component {
   }
 
   componentDidMount() {
+    this.handleBackHandler();
     this.intervalOpacity();
-    this.intervalAnimatePageY();
+    this.intervalAnimatePageYIn();
   };
 
   componentWillUnmount() {
-    clearInterval(this.openTransition);
+    this.backHandler.remove();
   }
 
-  intervalAnimatePageY = () => {
+  handleBackHandler = () => {
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      this.onBackPress();
+      return true;
+    })
+  }
+
+  intervalAnimatePageYIn = () => {
     const { animatePageY } = this.state;
     Animated.timing(
       animatePageY,
@@ -28,6 +49,10 @@ class ItemDetail extends Component {
     })
   };
 
+  intervalAnimatePageYOut = () => {
+
+  }
+
   intervalOpacity = () => {
     const { opacity } = this.state;
     Animated.timing(
@@ -36,10 +61,11 @@ class ItemDetail extends Component {
     ).start()
   };
 
-  renderLayerTransition = () => {
+  renderLayerTransitionIn = () => {
     const { navigation } = this.props;
     const { animatePageY, layerOpacity } = this.state;
     const { width, height, pageX, pageY } = navigation.getParam('position');
+    const name = navigation.getParam('name');
     return (
       <View style={{ flex: 1, opacity: layerOpacity }}>
         <Animated.View style={{
@@ -53,11 +79,21 @@ class ItemDetail extends Component {
           }),
           right: pageX,
           borderRadius: 10,
-          elevation: 1
-        }} />
+          elevation: 1,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }} >
+          <Text>{name}</Text>
+        </Animated.View>
       </View>
     )
   };
+
+  onBackPress = () => {
+    const { navigation } = this.props;
+
+    navigation.navigate('ItemList')
+  }
 
   renderBackground = () => {
     return (
@@ -69,27 +105,35 @@ class ItemDetail extends Component {
     const { navigation } = this.props;
     const { layerOpacity } = this.state;
     const { width, height, pageX } = navigation.getParam('position');
+    const name = navigation.getParam('name');
 
     return (
-      <View style={{
-        position: 'absolute',
-        backgroundColor: 'white',
-        width,
-        height: height - 20,
-        top: 60,
-        right: pageX,
-        borderRadius: 10,
-        elevation: 1,
-        opacity: layerOpacity === 0 ? 1 : 0
-      }} />
+      <View
+        ref={component => this.headerContainer = component}
+        style={{
+          position: 'absolute',
+          backgroundColor: 'white',
+          width,
+          height: height - 20,
+          top: 60,
+          right: pageX,
+          borderRadius: 10,
+          elevation: 1,
+          opacity: layerOpacity === 0 ? 1 : 0,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+        <Text>{name}</Text>
+      </View>
     )
   }
 
   render() {
-    const { opacity } = this.state;
+    const { opacity, onBack } = this.state;
     return (
       <View>
-        {this.renderLayerTransition()}
+        <StatusBar barStyle="light-content" backgroundColor='grey' />
+        {this.renderLayerTransitionIn()}
         <Animated.View style={{
           opacity: opacity.interpolate({
             inputRange: [0, 2],
