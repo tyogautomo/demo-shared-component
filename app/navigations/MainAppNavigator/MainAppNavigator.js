@@ -5,7 +5,7 @@ import { ItemDetail, ItemList } from '../screenConfig';
 const MainAppNavigator = createStackNavigator(
   {
     ItemList: {
-      screen: ItemList,
+      screen: ItemList
     },
     ItemDetail: {
       screen: ItemDetail

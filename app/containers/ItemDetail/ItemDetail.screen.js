@@ -1,18 +1,5 @@
 import React, { Component } from 'react';
 import { View, StatusBar, Text, BackHandler, Animated } from 'react-native';
-// import Animated from 'react-native-reanimated';
-// const {
-//   Clock,
-//   Value,
-//   set,
-//   cond,
-//   startClock,
-//   clockRunning,
-//   timing,
-//   debug,
-//   stopClock,
-//   block,
-// } = Animated
 
 class ItemDetail extends Component {
   state = {
@@ -30,6 +17,10 @@ class ItemDetail extends Component {
 
   componentWillUnmount() {
     this.backHandler.remove();
+  }
+
+  onBackPress = () => {
+    this.intervalAnimatePageYOut();
   }
 
   handleBackHandler = () => {
@@ -50,7 +41,19 @@ class ItemDetail extends Component {
   };
 
   intervalAnimatePageYOut = () => {
+    const { animatePageY, opacity } = this.state;
+    const { navigation } = this.props;
 
+    this.setState({ layerOpacity: 1 }, () => {
+      Animated.sequence([
+        Animated.timing(opacity, { toValue: 0, duration: 200 }),
+        Animated.timing(animatePageY, { toValue: 0, duration: 400 })
+      ]).start(() => {
+        setTimeout(() => {
+          navigation.navigate('ItemList');
+        }, 200);
+      })
+    })
   }
 
   intervalOpacity = () => {
@@ -61,13 +64,12 @@ class ItemDetail extends Component {
     ).start()
   };
 
-  renderLayerTransitionIn = () => {
+  renderLayerTransition = () => {
     const { navigation } = this.props;
     const { animatePageY, layerOpacity } = this.state;
     const { width, height, pageX, pageY } = navigation.getParam('position');
-    const name = navigation.getParam('name');
     return (
-      <View style={{ flex: 1, opacity: layerOpacity }}>
+      <View style={{ flex: 1, opacity: layerOpacity, zIndex: 100 }}>
         <Animated.View style={{
           position: 'absolute',
           backgroundColor: 'white',
@@ -79,21 +81,24 @@ class ItemDetail extends Component {
           }),
           right: pageX,
           borderRadius: 10,
-          elevation: 1,
+          elevation: 2,
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          flexDirection: 'row',
+          paddingHorizontal: 20
         }} >
-          <Text>{name}</Text>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ backgroundColor: '#e3e3e3', width: 80, height: 80, borderRadius: 40 }} />
+          </View>
+          <View style={{ flex: 2, paddingLeft: 20, justifyContent: 'center' }}>
+            <View style={{ width: 150, height: 20, backgroundColor: '#e3e3e3', borderRadius: 5, marginBottom: 10 }} />
+            <View style={{ width: 80, height: 20, backgroundColor: '#e3e3e3', borderRadius: 5, marginBottom: 10 }} />
+            <View style={{ width: 100, height: 20, backgroundColor: '#e3e3e3', borderRadius: 5 }} />
+          </View>
         </Animated.View>
       </View>
     )
   };
-
-  onBackPress = () => {
-    const { navigation } = this.props;
-
-    navigation.navigate('ItemList')
-  }
 
   renderBackground = () => {
     return (
@@ -105,7 +110,6 @@ class ItemDetail extends Component {
     const { navigation } = this.props;
     const { layerOpacity } = this.state;
     const { width, height, pageX } = navigation.getParam('position');
-    const name = navigation.getParam('name');
 
     return (
       <View
@@ -118,12 +122,21 @@ class ItemDetail extends Component {
           top: 60,
           right: pageX,
           borderRadius: 10,
-          elevation: 1,
+          elevation: 2,
           opacity: layerOpacity === 0 ? 1 : 0,
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          flexDirection: 'row',
+          paddingHorizontal: 20
         }}>
-        <Text>{name}</Text>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={{ backgroundColor: '#e3e3e3', width: 80, height: 80, borderRadius: 40 }} />
+        </View>
+        <View style={{ flex: 2, paddingLeft: 20, justifyContent: 'center' }}>
+          <View style={{ width: 150, height: 20, backgroundColor: '#e3e3e3', borderRadius: 5, marginBottom: 10 }} />
+          <View style={{ width: 80, height: 20, backgroundColor: '#e3e3e3', borderRadius: 5, marginBottom: 10 }} />
+          <View style={{ width: 100, height: 20, backgroundColor: '#e3e3e3', borderRadius: 5 }} />
+        </View>
       </View>
     )
   }
@@ -133,7 +146,7 @@ class ItemDetail extends Component {
     return (
       <View>
         <StatusBar barStyle="light-content" backgroundColor='grey' />
-        {this.renderLayerTransitionIn()}
+        {this.renderLayerTransition()}
         <Animated.View style={{
           opacity: opacity.interpolate({
             inputRange: [0, 2],

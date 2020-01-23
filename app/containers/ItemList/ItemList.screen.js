@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView} from 'react-native';
+import { View, ScrollView, Animated } from 'react-native';
 
 import { Item } from '../../modules/Item/Item.module'
 
@@ -23,7 +23,7 @@ class ItemList extends Component {
         name: 'item 4'
       }
     ],
-    isFromDetail: false
+    pageOpacity: new Animated.Value(0)
   }
 
   renderItemList = () => {
